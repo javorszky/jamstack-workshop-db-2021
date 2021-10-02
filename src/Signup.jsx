@@ -13,7 +13,7 @@ function Signup() {
                 <form
                     onSubmit={(e) => {
                         e.preventDefault()
-                        auth.signUp(email, pw)
+                        auth.signup(email, pw)
                     }}>
                     <div className="field">
                         <label className="label" htmlFor="email">Email address</label>

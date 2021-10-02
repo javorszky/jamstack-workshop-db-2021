@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import Signup from "./Signup";
 import { useAuth } from './use-auth'
 
 
@@ -93,7 +92,7 @@ function Nav() {
                             ) : (
                                 <>
                                     <LogIn />
-                                    <Signup />
+                                    <SignUp />
                                 </>
                             )}
                         </div>
