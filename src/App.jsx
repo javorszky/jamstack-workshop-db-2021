@@ -9,7 +9,7 @@ import {
 
 function App() {
   return (
-    <>
+    <section className="container">
       <Nav />
       <Switch>
         <Route path="/signup">
@@ -19,7 +19,7 @@ function App() {
           <Home />
         </Route>
       </Switch>
-    </>
+    </section>
   )
 }
 
