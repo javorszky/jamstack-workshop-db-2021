@@ -1,22 +1,10 @@
 import { useState } from 'react'
-import { supabase } from './supabase'
+import { useAuth } from './use-auth'
 
 export default function Auth() {
+    const auth = useAuth()
     const [loading, setLoading] = useState(false)
     const [email, setEmail] = useState('')
-
-    const handleLogin = async (email) => {
-        try {
-            setLoading(true)
-            const { error } = await supabase.auth.signIn({ email })
-            if (error) throw error
-            alert('Check your email for the login link!')
-        } catch (error) {
-            alert(error.error_description || error.message)
-        } finally {
-            setLoading(false)
-        }
-    }
 
     return (
         <div className="row flex flex-center">
@@ -36,7 +24,7 @@ export default function Auth() {
                     <button
                         onClick={(e) => {
                             e.preventDefault()
-                            handleLogin(email)
+                            auth.signin(email, pass)
                         }}
                         className={'button block'}
                         disabled={loading}

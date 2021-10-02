@@ -1,13 +1,25 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
 import Signup from './Signup'
+import Home from './Home'
+import Nav from './Nav'
+
+import {
+  Switch,
+  Route
+} from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      <Signup />
-    </div>
+    <>
+      <Nav />
+      <Switch>
+        <Route path="/signup">
+          <Signup />
+        </Route>
+        <Route path="/">
+          <Home />
+        </Route>
+      </Switch>
+    </>
   )
 }
 

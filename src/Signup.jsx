@@ -1,32 +1,19 @@
 import { useState } from 'react'
-import { supabase } from './supabase'
+import { useAuth } from './use-auth'
 
 function Signup() {
+    const auth = useAuth()
     const [email, setEmail] = useState('')
     const [pw, setPw] = useState('')
-
-
-    const handleSignup = async (email, pw) => {
-        console.log('handling signup for email and password')
-
-
-
-        const { user, session, error } = await supabase.auth.signUp({ email: email, password: pw, })
-
-        console.log('user', user)
-        console.log('session', session)
-        console.error('error', error)
-    }
-
 
     return (
         <section className="section container columns">
             <div className="column is-half">
-                <h1>Signup</h1>
+                <h1 className="title">Signup</h1>
                 <form
                     onSubmit={(e) => {
                         e.preventDefault()
-                        handleSignup(email, pw)
+                        auth.signUp(email, pw)
                     }}>
                     <div className="field">
                         <label className="label" htmlFor="email">Email address</label>
