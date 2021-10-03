@@ -21,11 +21,11 @@ export const useAuth = () => {
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
     const [user, setUser] = useState(null);
-    const [session, setSession] = useState(null);
+    const [globalSession, setSession] = useState(null);
 
     // Wrap any Firebase methods we want to use making sure ...
     // ... to save the user to state.
-    const signin = async (email, password) => {
+    const signin = async (email, password, cb) => {
         const { user, session, error } = await supabase.auth.signIn({
             email: email,
             password: password
@@ -34,15 +34,17 @@ function useProvideAuth() {
         if (error) {
             console.error("error logging in")
             console.error(error)
-            return
+            return false
         }
 
+        console.log('success', session, user)
         setUser(user)
         setSession(session)
-        return null
+
+        cb()
     };
 
-    const signup = async (email, password) => {
+    const signup = async (email, password, cb) => {
         const { user, session, error } = await supabase.auth.signUp({
             email: email,
             password: password
@@ -51,24 +53,25 @@ function useProvideAuth() {
         if (error) {
             console.error("error signing up")
             console.error(error)
-            return
+            return false
         }
         setUser(user)
         setSession(session)
-        return
+
+        cb()
     };
 
-    const signout = async () => {
+    const signout = async (cb) => {
         const { error } = await supabase.auth.signOut()
         if (error) {
             console.error("error signing out")
             console.error(error)
-            return
+            return false
         }
         setSession(null)
         setUser(null)
 
-        return
+        cb()
     };
 
     // Subscribe to user on mount
@@ -78,6 +81,7 @@ function useProvideAuth() {
     useEffect(() => {
         const unsubscribe = supabase.auth.onAuthStateChange((event, session) => {
             if (session) {
+                console.log('auth change happened', session)
                 setSession(session);
             } else {
                 setSession(null);
@@ -91,6 +95,7 @@ function useProvideAuth() {
     // Return the user object and auth methods
     return {
         user,
+        globalSession,
         signin,
         signup,
         signout
