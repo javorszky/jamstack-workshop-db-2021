@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import { supabase } from './supabase.js'
+import { useHistory } from 'react-router-dom'
 
 const authContext = createContext();
 
@@ -20,12 +21,12 @@ export const useAuth = () => {
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
-    const [user, setUser] = useState(null);
     const [globalSession, setSession] = useState(null);
+    let history = useHistory()
 
     // Wrap any Firebase methods we want to use making sure ...
     // ... to save the user to state.
-    const signin = async (email, password, cb) => {
+    const signin = async (email, password) => {
         const { user, session, error } = await supabase.auth.signIn({
             email: email,
             password: password
@@ -37,14 +38,12 @@ function useProvideAuth() {
             return false
         }
 
-        console.log('success', session, user)
-        setUser(user)
         setSession(session)
 
-        cb()
+        history.push('/')
     };
 
-    const signup = async (email, password, cb) => {
+    const signup = async (email, password) => {
         const { user, session, error } = await supabase.auth.signUp({
             email: email,
             password: password
@@ -55,13 +54,12 @@ function useProvideAuth() {
             console.error(error)
             return false
         }
-        setUser(user)
         setSession(session)
 
-        cb()
+        history.push('/')
     };
 
-    const signout = async (cb) => {
+    const signout = async () => {
         const { error } = await supabase.auth.signOut()
         if (error) {
             console.error("error signing out")
@@ -69,9 +67,8 @@ function useProvideAuth() {
             return false
         }
         setSession(null)
-        setUser(null)
 
-        cb()
+        history.push('/')
     };
 
     // Subscribe to user on mount
@@ -79,7 +76,7 @@ function useProvideAuth() {
     // ... component that utilizes this hook to re-render with the ...
     // ... latest auth object.
     useEffect(() => {
-        const unsubscribe = supabase.auth.onAuthStateChange((event, session) => {
+        const { data, error } = supabase.auth.onAuthStateChange((event, session) => {
             if (session) {
                 console.log('auth change happened', session)
                 setSession(session);
@@ -88,13 +85,17 @@ function useProvideAuth() {
             }
         });
 
+        if (error) {
+            console.error("something went wrong with calling the onauthstatechange for supabase")
+            console.error(error)
+        }
+
         // Cleanup subscription on unmount
-        return () => unsubscribe();
+        return () => data.unsubscribe();
     }, []);
 
     // Return the user object and auth methods
     return {
-        user,
         globalSession,
         signin,
         signup,

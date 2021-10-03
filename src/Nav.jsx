@@ -1,21 +1,12 @@
 import { Link } from "react-router-dom";
 import { useAuth } from './use-auth'
 
-
 function Nav() {
     const auth = useAuth()
 
-    const handleSignout = async () => {
-        const { error } = await supabase.auth.signOut()
-        if (error) {
-            console.error(error)
-        }
-        setUser({})
-    }
-
     const LogOut = () => {
         return (
-            <a className="button is-light" onClick={(e) => { auth.signOut() }}>
+            <a className="button is-light" onClick={auth.signout}>
                 Log out
             </a>
         )
@@ -87,8 +78,11 @@ function Nav() {
                 <div className="navbar-end">
                     <div className="navbar-item">
                         <div className="buttons">
-                            {auth.session ? (
-                                <LogOut />
+                            {auth.globalSession ? (
+                                <>
+                                    <p>Welcome {auth.globalSession.user.email}!</p>
+                                    <LogOut />
+                                </>
                             ) : (
                                 <>
                                     <LogIn />
