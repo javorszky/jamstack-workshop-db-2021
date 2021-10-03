@@ -22,6 +22,8 @@ export const useAuth = () => {
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
     const [globalSession, setSession] = useState(null);
+    const [notification, setNotification] = useState({})
+
     let history = useHistory()
 
     // Wrap any Firebase methods we want to use making sure ...
@@ -33,14 +35,16 @@ function useProvideAuth() {
         })
 
         if (error) {
-            console.error("error logging in")
-            console.error(error)
+            setNotification({
+                type: 'is-danger',
+                message: error.message
+            })
             return false
         }
 
+        setNotification({})
         setSession(session)
-
-        history.push('/')
+        return true
     };
 
     const signup = async (email, password) => {
@@ -99,6 +103,8 @@ function useProvideAuth() {
         globalSession,
         signin,
         signup,
-        signout
+        signout,
+        notification,
+        setNotification
     };
 }
