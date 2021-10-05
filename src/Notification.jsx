@@ -7,8 +7,6 @@ function Notification() {
         auth.setNotification({})
     }
 
-    console.log('auth notification is', auth.notification)
-
     return (
         <div className={'notification ' + auth.notification.type}>
             <button className="delete" onClick={dismiss}></button>

@@ -54,9 +54,18 @@ function useProvideAuth() {
         })
 
         if (error) {
-            console.error("error signing up")
-            console.error(error)
+            setNotification({
+                type: 'is-danger',
+                message: 'Error signing up: ' + error.message
+            })
             return false
+        }
+
+        if (session === null) {
+            setNotification({
+                type: 'is-success',
+                message: 'Nice! Check your email (including spam folders) for a confirmation link!'
+            })
         }
         setSession(session)
 
