@@ -1,17 +1,21 @@
 import { useState } from 'react'
 import { useAuth } from './use-auth'
+import { useHistory } from 'react-router-dom'
+
 
 function Login() {
     const auth = useAuth()
     const [email, setEmail] = useState('')
     const [pw, setPw] = useState('')
     const [loading, setLoading] = useState(false)
+    const history = useHistory()
 
     const handleLogin = async (e) => {
         setLoading(true)
         e.preventDefault()
         const success = await auth.signin(email, pw)
         setLoading(false)
+
         if (success) {
             history.push('/')
         }
