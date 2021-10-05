@@ -3,6 +3,7 @@ import Home from './Home'
 import Nav from './Nav'
 import Login from './Login'
 import Notification from './Notification'
+import Account from "./Account";
 
 import {
   Switch,
@@ -22,6 +23,9 @@ function App() {
         </Route>
         <Route path="/login">
           <Login />
+        </Route>
+        <Route path="/account">
+          <Account />
         </Route>
         <Route path="/">
           <Home />

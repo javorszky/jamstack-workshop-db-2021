@@ -47,6 +47,13 @@ function Nav() {
                     <Link className="navbar-item" to="/">
                         Home
                     </Link>
+                    {auth.globalSession ? (
+                        <Link className="navbar-item" to="/account">
+                            Account
+                        </Link>
+                    ) : (
+                        ''
+                    )}
 
                     {/* <a className="navbar-item">
                         Documentation
