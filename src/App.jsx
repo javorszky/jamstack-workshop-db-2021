@@ -6,12 +6,34 @@ import Notification from "./Notification";
 import Account from "./Account";
 import Products from "./Products";
 
-import { Switch, Route } from "react-router-dom";
-import { useAuth } from "./use-auth";
+import { Switch, Route, Redirect } from "react-router-dom";
+import { useAuth } from "./useAuth";
 import CartList from "./Cart";
 
 function App() {
   const auth = useAuth();
+
+  // A wrapper for <Route> that redirects to the login
+  // screen if you're not yet authenticated.
+  const PrivateRoute = ({ children, ...rest }) => {
+    return (
+      <Route
+        {...rest}
+        render={({ location }) =>
+          auth.globalSession ? (
+            children
+          ) : (
+            <Redirect
+              to={{
+                pathname: "/login",
+                state: { from: location },
+              }}
+            />
+          )
+        }
+      />
+    );
+  };
   return (
     <section className="container">
       <Nav />
@@ -23,15 +45,15 @@ function App() {
         <Route path="/login">
           <Login />
         </Route>
-        <Route path="/account">
+        <PrivateRoute path="/account">
           <Account />
-        </Route>
+        </PrivateRoute>
         <Route path="/products">
           <Products />
         </Route>
-        <Route path="/cart">
+        <PrivateRoute path="/cart">
           <CartList />
-        </Route>
+        </PrivateRoute>
         <Route path="/">
           <Home />
         </Route>

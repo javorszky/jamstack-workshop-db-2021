@@ -11,10 +11,8 @@ function Product(props) {
     e.preventDefault();
 
     cart.addItem(product, qty);
-    // console.log("adding " + qty + " of product " + product.id + " to the cart");
   };
 
-  console.log("pid", product.id);
   return (
     <tr>
       <td>{product.name}</td>

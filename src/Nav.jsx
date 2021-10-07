@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import CartMenu from "./CartMenu";
-import { useAuth } from "./use-auth";
+import { useAuth } from "./useAuth";
 
 function Nav() {
   const auth = useAuth();

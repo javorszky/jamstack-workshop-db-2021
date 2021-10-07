@@ -18,8 +18,6 @@ function useProvideCart() {
   const [cartItems, setCartItems] = useState({});
 
   const addItem = (item, qty) => {
-    console.log("incoming item", item, qty);
-    console.log("previous cart item", cartItems);
     const existing = cartItems[item.id];
     if (existing) {
       cartItems[item.id].qty += qty;
@@ -28,9 +26,8 @@ function useProvideCart() {
       cartItems[item.id] = item;
     }
 
-    console.log("setting cart item", cartItems);
-
-    setCartItems(cartItems);
+    const newCI = JSON.parse(JSON.stringify(cartItems));
+    setCartItems(newCI);
   };
 
   return { cartItems, setCartItems, addItem };

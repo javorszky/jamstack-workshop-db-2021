@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useAuth } from "./use-auth";
+import { useAuth } from "./useAuth";
 import { supabase } from "./supabase.js";
 import { useLocation } from "react-router-dom";
 
