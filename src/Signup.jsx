@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useAuth } from "./use-auth";
 import { supabase } from "./supabase.js";
 import { useLocation } from "react-router-dom";
@@ -13,33 +13,58 @@ function Signup() {
   const auth = useAuth();
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
+  const [invite, setInvite] = useState(false);
+  let inviter = useRef(null);
 
   const query = useQuery();
-  const inviter = query.get("inviter");
+  inviter.current = query.get("inviter");
 
-  const checkInvite = async (uid) => {
+  const canInvite = async (uid) => {
     const { data, error, count } = await supabase.rpc("is_employee", {
       uid: uid,
     });
 
-    console.log("inviter check", data, error, count);
-    // if (error || !count) {
-    //   auth.setNotification({
-    //     type: "is-danger",
-    //     message: "You have an invite referral, but that is invalid.",
-    //   });
-    //   return false;
-    // }
+    if (error) {
+      console.log("returning an error here", error);
+      return false;
+    }
 
-    return uid;
+    console.log(
+      "no error, returning the opposite of data. Is employee true can not invite. is employee is: " +
+        data
+    );
+    return !data;
   };
 
-  if (inviter !== null) {
-    console.log("checking inviter");
-    checkInvite(inviter);
-  }
+  useEffect(async () => {
+    if (inviter.current !== null) {
+      console.log("what is inviter if it is not null?", inviter);
+      const bla = await canInvite(inviter.current);
+      setInvite(bla);
+    }
+  }, []);
 
-  console.log(query.get("inviter"));
+  const RefSignup = () => {
+    if (invite) {
+      console.log("invite is true, what...");
+      return (
+        <div className="field">
+          <button
+            className="button is-primary"
+            type="submit"
+            onClick={() => {
+              auth.signupWithReferral(email, pw, inviter.current);
+            }}
+          >
+            Sign up with referral
+          </button>
+        </div>
+      );
+    }
+    console.log("invite is false");
+
+    return <></>;
+  };
 
   return (
     <>
@@ -47,7 +72,6 @@ function Signup() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          auth.signup(email, pw);
         }}
       >
         <div className="field">
@@ -79,10 +103,17 @@ function Signup() {
           </div>
         </div>
         <div className="field">
-          <button className="button is-primary" type="submit">
+          <button
+            className="button is-primary"
+            type="submit"
+            onClick={() => {
+              auth.signup(email, pw);
+            }}
+          >
             Sign up
           </button>
         </div>
+        <RefSignup />
       </form>
     </>
   );
