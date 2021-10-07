@@ -18,16 +18,9 @@ function Signup() {
   const inviter = query.get("inviter");
 
   const checkInvite = async (uid) => {
-    const { data, error, count } = await supabase
-      .from("profiles")
-      .select(
-        `
-      id,
-      employee_id:id!employee_id (employee_id)
-      `
-      )
-      .eq("id", uid)
-      .is("employee_id", null);
+    const { data, error, count } = await supabase.rpc("is_employee", {
+      uid: uid,
+    });
 
     console.log("inviter check", data, error, count);
     // if (error || !count) {
