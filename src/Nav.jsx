@@ -98,9 +98,9 @@ function Nav() {
         </div>
 
         <div className="navbar-end">
-          <div className="navbar-item">
+          <Link className="navbar-item" to="/cart">
             <CartMenu />
-          </div>
+          </Link>
           <div className="navbar-item">
             <div className="buttons">
               {auth.globalSession ? (

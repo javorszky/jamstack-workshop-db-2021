@@ -8,6 +8,7 @@ import Products from "./Products";
 
 import { Switch, Route } from "react-router-dom";
 import { useAuth } from "./use-auth";
+import CartList from "./Cart";
 
 function App() {
   const auth = useAuth();
@@ -27,6 +28,9 @@ function App() {
         </Route>
         <Route path="/products">
           <Products />
+        </Route>
+        <Route path="/cart">
+          <CartList />
         </Route>
         <Route path="/">
           <Home />
