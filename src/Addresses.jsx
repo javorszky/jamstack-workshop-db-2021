@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "./supabase.js";
 import { useAuth } from "./useAuth";
 import AddAddress from "./AddAddress.jsx";
+import RenderAddresses from "./RenderAddresses.jsx";
 
 function Addresses() {
   const auth = useAuth();
@@ -11,9 +12,10 @@ function Addresses() {
   const getAddresses = async () => {
     const sha = await getAddress("shipping");
     const ba = await getAddress("billing");
+    console.log(sha, "in getaddresses");
 
-    setShippingAddresses(sha);
-    setBillingAddresses(ba);
+    setShippingAddresses(JSON.parse(JSON.stringify(sha)));
+    setBillingAddresses(JSON.parse(JSON.stringify(ba)));
   };
 
   const getAddress = async (type) => {
@@ -23,6 +25,7 @@ function Addresses() {
       .eq("user_id", auth.globalSession.user.id)
       .eq("type", type);
 
+    console.log(data, error, "in getaddress", type);
     if (error) {
       auth.setNotification({
         type: "is-danger",
@@ -34,28 +37,7 @@ function Addresses() {
     return data;
   };
 
-  function RenderAddresses(props) {
-    if (!props.addresses || props.addresses.length) {
-      return <li>No {props.type} addresses held.</li>;
-    }
-    return props.addresses.map((item) => {
-      return (
-        <li>
-          {item.address1}
-          <br />
-          {item.address2}
-          <br />
-          {item.city}
-          <br />
-          {item.state}
-          <br />
-          {item.country}
-        </li>
-      );
-    });
-  }
-
-  useEffect(() => {
+  useEffect(async () => {
     getAddresses();
   }, []);
 
@@ -66,11 +48,15 @@ function Addresses() {
       <AddAddress />
       <div className="shipping">
         <h3 className="subtitle is-3">Shipping</h3>
-        <RenderAddresses type="shipping" addresses={shippingAddresses} />
+        <ul>
+          <RenderAddresses type="shipping" addresses={shippingAddresses} />
+        </ul>
       </div>
       <div className="billing">
         <h3 className="subtitle is-3">Billing</h3>
-        <RenderAddresses type="billing" addresses={billingAddresses} />
+        <ul>
+          <RenderAddresses type="billing" addresses={billingAddresses} />
+        </ul>
       </div>
     </>
   );
