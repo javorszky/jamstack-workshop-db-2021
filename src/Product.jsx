@@ -8,8 +8,10 @@ function Product(props) {
     e.preventDefault();
     console.log("adding " + qty + " of product " + product.id + " to the cart");
   };
+
+  console.log("pid", product.id);
   return (
-    <tr key={product.id}>
+    <tr>
       <td>{product.name}</td>
       <td>
         <input

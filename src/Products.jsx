@@ -20,13 +20,13 @@ function Products() {
     if (products.length === 0) {
       return (
         <tr>
-          <td className="colspan">4There are no products</td>
+          <td className="colspan">There are no products</td>
         </tr>
       );
     }
 
     const pmap = products.map((product) => {
-      return <Product product={product} />;
+      return <Product key={product.id} product={product} />;
     });
 
     return <>{pmap}</>;

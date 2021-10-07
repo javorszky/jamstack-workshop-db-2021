@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import CartMenu from "./CartMenu";
 import { useAuth } from "./use-auth";
 
 function Nav() {
@@ -97,6 +98,9 @@ function Nav() {
         </div>
 
         <div className="navbar-end">
+          <div className="navbar-item">
+            <CartMenu />
+          </div>
           <div className="navbar-item">
             <div className="buttons">
               {auth.globalSession ? (
