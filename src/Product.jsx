@@ -1,12 +1,17 @@
 import { useState } from "react";
+import { useCart } from "./useCart";
 
 function Product(props) {
   const product = props.product;
   const [qty, setQty] = useState(1);
 
+  const cart = useCart();
+
   const handleAddToCart = (e) => {
     e.preventDefault();
-    console.log("adding " + qty + " of product " + product.id + " to the cart");
+
+    cart.addItem(product, qty);
+    // console.log("adding " + qty + " of product " + product.id + " to the cart");
   };
 
   console.log("pid", product.id);

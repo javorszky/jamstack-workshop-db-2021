@@ -18,16 +18,20 @@ function useProvideCart() {
   const [cartItems, setCartItems] = useState({});
 
   const addItem = (item, qty) => {
+    console.log("incoming item", item, qty);
+    console.log("previous cart item", cartItems);
     const existing = cartItems[item.id];
+    if (existing) {
+      cartItems[item.id].qty += qty;
+    } else {
+      item.qty = qty;
+      cartItems[item.id] = item;
+    }
 
-    item.qty = qty;
+    console.log("setting cart item", cartItems);
 
-    setCartItems((cartItems[item.id] = item));
+    setCartItems(cartItems);
   };
 
-  useEffect(() => {
-    console.log("cart items changed", cartItems);
-  }, [cartItems]);
-
-  return [cartItems, setCartItems, addItem];
+  return { cartItems, setCartItems, addItem };
 }
