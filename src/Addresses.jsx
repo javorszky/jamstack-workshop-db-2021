@@ -14,18 +14,18 @@ function Addresses() {
     const ba = await getAddress("billing");
     console.log(sha, "in getaddresses");
 
-    setShippingAddresses(JSON.parse(JSON.stringify(sha)));
-    setBillingAddresses(JSON.parse(JSON.stringify(ba)));
+    setShippingAddresses(sha);
+    setBillingAddresses(ba);
   };
 
   const getAddress = async (type) => {
+    console.log(auth.globalSession.user.id);
     const { data, error } = await supabase
       .from("addresses")
       .select()
       .eq("user_id", auth.globalSession.user.id)
       .eq("type", type);
 
-    console.log(data, error, "in getaddress", type);
     if (error) {
       auth.setNotification({
         type: "is-danger",
@@ -38,7 +38,7 @@ function Addresses() {
   };
 
   useEffect(async () => {
-    getAddresses();
+    await getAddresses();
   }, []);
 
   return (
